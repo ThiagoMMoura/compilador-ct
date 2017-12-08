@@ -1,0 +1,17 @@
+incluir <stdio.h>
+incluir <stdlib.h>
+
+funcao_principal {
+	inteiro teste	
+        real dinheiro
+        caracter palavra[]
+
+        retornar dinheiro
+}
+
+funcao real functeste(inteiro parame) {
+    inteiro teste2
+}
+
+funcao inteiro func2(){
+}

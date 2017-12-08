@@ -8,31 +8,61 @@
 %token <sval> INCLUSAO_ARQUIVO
 %token ABRE_CHAVES
 %token FECHA_CHAVES
+%token ABRE_PARENTESES
+%token FECHA_PARENTESES
 %token FUNCAO_PRINCIPAL
+%token ABRE_COLCHETES
+%token FECHA_COLCHETES
 %token INCLUIR
 %token INTEIRO
+%token REAL
+%token CARACTER
+%token FUNCAO
+%token RETORNAR
 %type <sval> programa
 %type <sval> funcao_principal
 %type <sval> inclusao
 %type <sval> comandos
 %type <sval> declaracao
+%type <sval> tipo
+%type <sval> atributos
+%type <sval> bloco
+%type <sval> declaracao_vetor
+%type <sval> vetor
 
 %%
 inicio : programa	 { System.out.println($1); }
 
 programa : inclusao programa	{ $$ = $1 + "\n" + $2; }
 		 | funcao_principal programa { $$ = $1 + "\n" + $2; }
+                 | FUNCAO declaracao atributos bloco programa { $$ = $2 + $3 + $4 + $5; }
 	     |					{ $$ = ""; }
 
-funcao_principal : FUNCAO_PRINCIPAL ABRE_CHAVES comandos FECHA_CHAVES { $$ = "int main() {\n " + $3 + "}\n"; }
+funcao_principal : FUNCAO_PRINCIPAL bloco { $$ = "int main() " + $2; }
+
+bloco : ABRE_CHAVES comandos FECHA_CHAVES { $$ = "{\n " + $2 + "}\n"; }
 
 inclusao : INCLUIR INCLUSAO_ARQUIVO	{ $$ = "#include " + $2; }
 
-comandos : declaracao		{ $$ = $1; }
+comandos : declaracao comandos	{ $$ = $1 + ";\n" + $2; }
+            | declaracao_vetor comandos { $$ = $1 + ";\n" + $2; }
+            | RETORNAR IDENTIFICADOR comandos { $$ = "return " + $2 + ";\n" + $3; }
 		 |					{ $$ = ""; }
 
-declaracao : INTEIRO IDENTIFICADOR	{  $$ = "int " + $2 + ";\n"; }
+declaracao_vetor : declaracao vetor { $$ = $1 + $2; }
 
+declaracao : tipo IDENTIFICADOR	{  $$ = $1 + $2;  }
+
+vetor : ABRE_COLCHETES FECHA_COLCHETES { $$ = "[]"; }
+        | ABRE_COLCHETES IDENTIFICADOR FECHA_COLCHETES { $$ = "[" + $2 + "]"; }
+
+atributos : ABRE_PARENTESES FECHA_PARENTESES { $$ = "()"; }
+            | ABRE_PARENTESES declaracao FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
+            | ABRE_PARENTESES declaracao_vetor FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
+
+tipo : INTEIRO { $$ = "int "; }
+        | REAL { $$ = "float "; }
+        | CARACTER { $$ = "char "; }
 %%
 
 	// Referencia ao JFlex
