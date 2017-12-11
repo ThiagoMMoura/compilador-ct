@@ -2,16 +2,40 @@ incluir <stdio.h>
 incluir <stdlib.h>
 
 funcao_principal {
-	inteiro teste	
-        real dinheiro
-        caracter palavra[]
-
-        retornar dinheiro
+        inteiro tam
+        real dinheiro[tam - 1]
+        caracter palavra[tam]
+        dinheiro[0] := 6
+        dinheiro[tam++] := 20 * dinheiro[0]
+        dinheiro[tam-1] := 30
+        palavra[0] := 'a'
+        palavra[1] := 'b'
+        retornar dinheiro[0]+ tam++
 }
 
 funcao real functeste(inteiro parame) {
-    inteiro teste2
+    inteiro i 
+    i := 0
+    inteiro teste2[i + 10]
+    i++3
 }
 
 funcao inteiro func2(){
+    inteiro atrib
+    inteiro n
+    atrib := 1
+    atrib := 1 + 1
+    atrib := 1 * 2 + 10
+    atrib := 1 + n
+    atrib := n * 2
+    atrib := n + atrib - 5
+    atrib := n / n
+    atrib:=rand()
+    atrib:=rand() + 1
+    atrib:=atrib+1
+    atrib--
+    n[i]++
+    n[rand()*10]:=math(atrib+12)/33
+    n[i++]:=imprima("%d\n %c",12,n[i])
+    retornar atrib + n
 }
