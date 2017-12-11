@@ -28,6 +28,7 @@ real    { return Parser.REAL; }
 caracter { return Parser.CARACTER; }
 funcao { return Parser.FUNCAO; }
 retornar { return Parser.RETORNAR; }
+imprima { return Parser.IMPRIMA; }
 \<.*\>	{ yyparser.yylval = new ParserVal(yytext());
 		  return Parser.INCLUSAO_ARQUIVO; }
 \".*\"  { yyparser.yylval = new ParserVal(yytext());

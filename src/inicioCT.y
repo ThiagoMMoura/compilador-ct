@@ -19,6 +19,7 @@
 %token CARACTER
 %token FUNCAO
 %token RETORNAR
+%token IMPRIMA
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
 %token OP_INCREMENTO
@@ -79,6 +80,7 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | atribuicao comandos { $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
+            
 		 |					{ $$ = ""; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
@@ -94,6 +96,7 @@ atributos : ABRE_PARENTESES FECHA_PARENTESES { $$ = "()"; }
             | ABRE_PARENTESES declaracao FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 chamada_funcao : IDENTIFICADOR parametros { $$ = $1 + $2; }
+        | IMPRIMA parametros { $$ = "printf" + $2; }
 
 parametros : ABRE_PARENTESES FECHA_PARENTESES { $$ = "()"; }
         | ABRE_PARENTESES mult_parametros FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
