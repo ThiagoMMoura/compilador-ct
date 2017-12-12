@@ -26,6 +26,8 @@
 %token OPCAO
 %token FIM_OPCAO
 %token ENQUANTO
+%token FACA
+%token ATE
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
 %token OP_INCREMENTO
@@ -72,6 +74,7 @@
 %type <sval> cmd_switch
 %type <sval> cmd_case
 %type <sval> cmd_while
+%type <sval> cmd_do_while
 %type <sval> operandos_switch
 
 %%
@@ -95,6 +98,7 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | cmd_if comandos { $$ = $1 + $2; }
             | cmd_switch comandos { $$ = $1 + $2; }
             | cmd_while comandos { $$ = $1 + $2; }
+            | cmd_do_while comandos { $$ = $1 + $2; }
             |					{ $$ = ""; }
 
 cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
@@ -110,6 +114,8 @@ cmd_case: OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECH
 
 cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n "; }
         | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n  "; }
+
+cmd_do_while : FACA ABRE_CHAVES comandos FECHA_CHAVES ATE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "do{\n  " + $3 + "}while(" + $7 + ");"; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 

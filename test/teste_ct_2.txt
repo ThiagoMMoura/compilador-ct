@@ -63,16 +63,22 @@ funcao inteiro func2(){
 
 funcao inteiro testaSwitch(caracter ca){
     inteiro i
-    caso(ca){
-        opcao 'a':
-            i:= 1
-            fim_opcao
-        opcao 'b':
-            i:= 2
-            fim_opcao
-        opcao 'c':
-            i:=3
-            fim_opcao
-        }
+    inteiro retorno
+    caracter inter[tam]
+    inter:=ca
+    faca{
+        caso(inter[i]){
+            opcao 'a':
+                retorno:= 1
+                fim_opcao
+            opcao 'b':
+                retorno:= 2
+                fim_opcao
+            opcao 'c':
+                retorno:=3
+                fim_opcao
+            }
+        i++
+    }ate(i<tam)
     retornar i
 }

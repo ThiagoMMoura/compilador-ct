@@ -34,6 +34,8 @@ caso { return Parser.CASO; }
 opcao { return Parser.OPCAO; }
 fim_opcao { return Parser.FIM_OPCAO; }
 enquanto { return Parser.ENQUANTO; }
+faca { return Parser.FACA; }
+ate { return Parser.ATE; }
 imprima { return Parser.IMPRIMA; }
 \<.*\>	{ yyparser.yylval = new ParserVal(yytext());
 		  return Parser.INCLUSAO_ARQUIVO; }
