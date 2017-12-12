@@ -10,6 +10,8 @@ funcao_principal {
         dinheiro[tam-1] := 30
         palavra[0] := 'a'
         palavra[1] := 'b'
+        se(palavra[1]=='b')
+            palavra[2]:='c'
         retornar dinheiro[0]+ tam++
 }
 

@@ -63,18 +63,19 @@
 %type <sval> decremento
 %type <sval> operandos_aritmeticos
 %type <sval> chamada_funcao
+%type <sval> cmd_if
 
 %%
 inicio : programa	 { System.out.println($1); }
 
 programa : inclusao programa	{ $$ = $1 + "\n" + $2; }
 		 | funcao_principal programa { $$ = $1 + "\n" + $2; }
-                 | FUNCAO declaracao atributos bloco programa { $$ = $2 + $3 + $4 + $5; }
+                 | FUNCAO declaracao atributos bloco programa { $$ = $2 + $3 + $4 + "\n" + $5; }
 	     |					{ $$ = ""; }
 
-funcao_principal : FUNCAO_PRINCIPAL bloco { $$ = "int main() " + $2; }
+funcao_principal : FUNCAO_PRINCIPAL bloco { $$ = "int main() " + $2 + "\n"; }
 
-bloco : ABRE_CHAVES comandos FECHA_CHAVES { $$ = "{\n " + $2 + "}\n"; }
+bloco : ABRE_CHAVES comandos FECHA_CHAVES { $$ = "{\n " + $2 + "}"; }
 
 inclusao : INCLUIR INCLUSAO_ARQUIVO	{ $$ = "#include " + $2; }
 
@@ -82,9 +83,12 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | atribuicao comandos { $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
-            | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco comandos { $$ = "if(" + $3 + ")" + $5 + $6; }
-            | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco comandos { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + $8; }
+            | cmd_if comandos { $$ = $1 + $2; }
             |					{ $$ = ""; }
+
+cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
+        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "if(" + $3 + ")" + $5 + "\n "; }
+        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "if(" + $3 + ")\n  "; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 
