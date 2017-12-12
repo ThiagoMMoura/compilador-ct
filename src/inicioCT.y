@@ -49,6 +49,8 @@
 %token PONTO_VIRGULA
 %token <sval> STRING
 %token <sval> CHAR
+%token <sval> COMENTARIO_LINHA
+%token <sval> COMENTARIO_BLOCO
 %type <sval> operador_logico
 %type <sval> operador_aritmetico
 %type <sval> programa
@@ -84,8 +86,10 @@
 inicio : programa	 { System.out.println($1); }
 
 programa : inclusao programa	{ $$ = $1 + "\n" + $2; }
-		 | funcao_principal programa { $$ = $1 + "\n" + $2; }
-                 | FUNCAO declaracao atributos bloco programa { $$ = $2 + $3 + $4 + "\n" + $5; }
+		| funcao_principal programa { $$ = $1 + "\n" + $2; }
+                | FUNCAO declaracao atributos bloco programa { $$ = $2 + $3 + $4 + "\n" + $5; }
+                | COMENTARIO_LINHA programa { $$ = $1 + "\n" + $2; }
+                | COMENTARIO_BLOCO programa { $$ = $1 + "\n" + $2; }
 	     |					{ $$ = ""; }
 
 funcao_principal : FUNCAO_PRINCIPAL bloco { $$ = "int main() " + $2 + "\n"; }
@@ -103,6 +107,8 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | cmd_while comandos { $$ = $1 + $2; }
             | cmd_do_while comandos { $$ = $1 + $2; }
             | cmd_for comandos { $$ = $1 + $2; }
+            | COMENTARIO_LINHA comandos { $$ = $1 + "\n" + $2; }
+            | COMENTARIO_BLOCO comandos { $$ = $1 + "\n" + $2; }
             |					{ $$ = ""; }
 
 cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }

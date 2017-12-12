@@ -70,7 +70,12 @@ imprima { return Parser.IMPRIMA; }
 ">=" { return Parser.OP_MAIOR_IGUAL; }
 "<=" { return Parser.OP_MENOR_IGUAL; }
 ":=" { return Parser.OP_ATRIBUICAO; }
+"=" { return Parser.OP_ATRIBUICAO; }
 "," { return Parser.VIRGULA; }
 ":" { return Parser.DOIS_PONTOS; }
 ";" { return Parser.PONTO_VIRGULA; }
+\/\/.*   { yyparser.yylval = new ParserVal(yytext());
+                return Parser.COMENTARIO_LINHA; }
+\/\*.*\*\/   { yyparser.yylval = new ParserVal(yytext());
+                return Parser.COMENTARIO_BLOCO; }
 {NL}|" "|\t	{  }

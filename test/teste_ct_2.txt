@@ -27,7 +27,7 @@ funcao real functeste(inteiro parame) {
         }
     }
     enquanto(i<10){
-        se(teste2[i]==0)
+        se(teste2[i]%i==0)
             teste2[i]++
         i++
     }
@@ -60,7 +60,8 @@ funcao inteiro func2(){
     n[i++]:=imprima("%d\n %c",12,n[i])
     retornar atrib + n
 }
-
+// teste comentário
+/* comentário teste 2 */
 funcao inteiro testaSwitch(caracter ca){
     inteiro i
     inteiro retorno
