@@ -34,6 +34,14 @@ funcao inteiro func2(){
     atrib:=rand() + 1
     atrib:=atrib+1
     atrib--
+    atrib:=(1+n)-2
+    atrib:=(1+n*8)
+    atrib:=50/(1+n)
+    atrib:=(rand()*n)-2*8
+    atrib:=(rand()*n)-(2*8)
+    atrib:=((rand()*n)-2)*8
+    atrib:=(rand()*(n-10))-2*8
+    atrib:=12+(rand()*n)-2*8
     n[i]++
     n[rand()*10]:=math(atrib+12)/33
     n[i++]:=imprima("%d\n %c",12,n[i])

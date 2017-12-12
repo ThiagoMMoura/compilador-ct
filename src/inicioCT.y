@@ -80,8 +80,7 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | atribuicao comandos { $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
-            
-		 |					{ $$ = ""; }
+            |					{ $$ = ""; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 
@@ -93,7 +92,7 @@ vetor : ABRE_COLCHETES FECHA_COLCHETES { $$ = "[]"; }
         | ABRE_COLCHETES expres_aritmeticas FECHA_COLCHETES { $$ = "[" + $2 + "]"; }
 
 atributos : ABRE_PARENTESES FECHA_PARENTESES { $$ = "()"; }
-            | ABRE_PARENTESES declaracao FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
+        | ABRE_PARENTESES declaracao FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 chamada_funcao : IDENTIFICADOR parametros { $$ = $1 + $2; }
         | IMPRIMA parametros { $$ = "printf" + $2; }
@@ -115,28 +114,33 @@ decremento : variavel OP_DECREMENTO { $$ = $1 + "--"; }
         | variavel OP_DECREMENTO NUMERICO { $$ = $1 + "++" + $3; }
 
 expressoes : operandos_logicos { $$ = $1; }
-        | expres_aritmeticas { $$ = $1; }
         | expres_logicas { $$ = $1; }
 
 expres_aritmeticas : operandos_aritmeticos operador_aritmetico expres_aritmeticas { $$ = $1 + $2 + $3; }
         | operandos_aritmeticos operador_aritmetico operandos_aritmeticos { $$ = $1 + $2 + $3; }
+        | ABRE_PARENTESES expres_aritmeticas FECHA_PARENTESES operador_aritmetico operandos_aritmeticos { $$ = "(" + $2 + ")" + $4 + $5; }
+        | ABRE_PARENTESES expres_aritmeticas FECHA_PARENTESES operador_aritmetico expres_aritmeticas { $$ = "(" + $2 + ")" + $4 + $5; }
+        | ABRE_PARENTESES expres_aritmeticas FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 expres_logicas : operandos_logicos operador_logico expres_logicas { $$ = $1 + $2 + $3; }
-        | operandos_logicos operador_logico expres_aritmeticas { $$ = $1 + $2 + $3; }
-        | expres_aritmeticas operador_logico expres_aritmeticas { $$ = $1 + $2 + $3; }
-        | expres_aritmeticas operador_logico operandos_logicos { $$ = $1 + $2 + $3; }
-        | expres_aritmeticas operador_logico expres_logicas { $$ = $1 + $2 + $3; }
         | operandos_logicos operador_logico operandos_logicos { $$ = $1 + $2 + $3; }
+        | ABRE_PARENTESES expres_logicas FECHA_PARENTESES operador_logico operandos_logicos { $$ = "(" + $2 + ")" + $4 + $5; }
+        | ABRE_PARENTESES expres_logicas FECHA_PARENTESES operador_logico expres_logicas { $$ = "(" + $2 + ")" + $4 + $5; }
+        | ABRE_PARENTESES expres_logicas FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 operandos_aritmeticos : NUMERICO { $$ = $1; }
         | variavel { $$ = $1; }
         | incremento { $$ = $1; }
         | decremento { $$ = $1; }
         | chamada_funcao { $$ = $1; }
+        | ABRE_PARENTESES operandos_aritmeticos FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 operandos_logicos : operandos_aritmeticos { $$ = $1; }
+        | expres_aritmeticas { $$ = $1; }
         | CHAR { $$ = $1; }
         | STRING { $$ = $1; }
+        | ABRE_PARENTESES CHAR FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
+        | ABRE_PARENTESES STRING FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
 
 operador_aritmetico : OP_SOMA { $$ = " + "; }
         | OP_SUB { $$ = " - "; }
