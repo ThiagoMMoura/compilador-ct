@@ -36,6 +36,7 @@ fim_opcao { return Parser.FIM_OPCAO; }
 enquanto { return Parser.ENQUANTO; }
 faca { return Parser.FACA; }
 ate { return Parser.ATE; }
+para { return Parser.PARA; }
 imprima { return Parser.IMPRIMA; }
 \<.*\>	{ yyparser.yylval = new ParserVal(yytext());
 		  return Parser.INCLUSAO_ARQUIVO; }
@@ -71,4 +72,5 @@ imprima { return Parser.IMPRIMA; }
 ":=" { return Parser.OP_ATRIBUICAO; }
 "," { return Parser.VIRGULA; }
 ":" { return Parser.DOIS_PONTOS; }
+";" { return Parser.PONTO_VIRGULA; }
 {NL}|" "|\t	{  }

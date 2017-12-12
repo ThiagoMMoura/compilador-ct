@@ -28,6 +28,7 @@
 %token ENQUANTO
 %token FACA
 %token ATE
+%token PARA
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
 %token OP_INCREMENTO
@@ -45,6 +46,7 @@
 %token OP_MENOR_IGUAL
 %token VIRGULA
 %token DOIS_PONTOS
+%token PONTO_VIRGULA
 %token <sval> STRING
 %token <sval> CHAR
 %type <sval> operador_logico
@@ -75,6 +77,7 @@
 %type <sval> cmd_case
 %type <sval> cmd_while
 %type <sval> cmd_do_while
+%type <sval> cmd_for
 %type <sval> operandos_switch
 
 %%
@@ -99,6 +102,7 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | cmd_switch comandos { $$ = $1 + $2; }
             | cmd_while comandos { $$ = $1 + $2; }
             | cmd_do_while comandos { $$ = $1 + $2; }
+            | cmd_for comandos { $$ = $1 + $2; }
             |					{ $$ = ""; }
 
 cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
@@ -115,7 +119,10 @@ cmd_case: OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECH
 cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n "; }
         | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n  "; }
 
-cmd_do_while : FACA ABRE_CHAVES comandos FECHA_CHAVES ATE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "do{\n  " + $3 + "}while(" + $7 + ");"; }
+cmd_do_while : FACA ABRE_CHAVES comandos FECHA_CHAVES ATE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "do{\n  " + $3 + "}while(" + $7 + ");\n "; }
+
+cmd_for : PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA incremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n "; }
+        | PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA decremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n "; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 

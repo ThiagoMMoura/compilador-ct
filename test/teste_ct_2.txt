@@ -82,3 +82,12 @@ funcao inteiro testaSwitch(caracter ca){
     }ate(i<tam)
     retornar i
 }
+
+funcao inteiro testaFor(inteiro tam){
+    inteiro i
+    inteiro lista[tam]
+    para(i:=0;i<tam;i++){
+        lista[i]:=i*5
+    }
+    retornar lista
+}
