@@ -20,6 +20,8 @@
 %token FUNCAO
 %token RETORNAR
 %token IMPRIMA
+%token SE
+%token SENAO
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
 %token OP_INCREMENTO
@@ -80,6 +82,8 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | atribuicao comandos { $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
+            | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco comandos { $$ = "if(" + $3 + ")" + $5 + $6; }
+            | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco comandos { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + $8; }
             |					{ $$ = ""; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }

@@ -16,7 +16,14 @@ funcao_principal {
 funcao real functeste(inteiro parame) {
     inteiro i 
     i := 0
-    inteiro teste2[i + 10]
+    inteiro teste2[10]
+    se(i>0){
+        teste2[i++]:=i
+    }senao{
+        se(i<0){
+            i++
+        }
+    }
     i++3
 }
 
