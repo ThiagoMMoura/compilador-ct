@@ -60,3 +60,19 @@ funcao inteiro func2(){
     n[i++]:=imprima("%d\n %c",12,n[i])
     retornar atrib + n
 }
+
+funcao inteiro testaSwitch(caracter ca){
+    inteiro i
+    caso(ca){
+        opcao 'a':
+            i:= 1
+            fim_opcao
+        opcao 'b':
+            i:= 2
+            fim_opcao
+        opcao 'c':
+            i:=3
+            fim_opcao
+        }
+    retornar i
+}

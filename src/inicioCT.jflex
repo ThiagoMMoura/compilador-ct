@@ -30,6 +30,9 @@ funcao { return Parser.FUNCAO; }
 retornar { return Parser.RETORNAR; }
 se { return Parser.SE; }
 senao { return Parser.SENAO; }
+caso { return Parser.CASO; }
+opcao { return Parser.OPCAO; }
+fim_opcao { return Parser.FIM_OPCAO; }
 enquanto { return Parser.ENQUANTO; }
 imprima { return Parser.IMPRIMA; }
 \<.*\>	{ yyparser.yylval = new ParserVal(yytext());
@@ -63,6 +66,7 @@ imprima { return Parser.IMPRIMA; }
 "<" { return Parser.OP_MENOR; }
 ">=" { return Parser.OP_MAIOR_IGUAL; }
 "<=" { return Parser.OP_MENOR_IGUAL; }
-":=" {return Parser.OP_ATRIBUICAO; }
-"," {return Parser.VIRGULA; }
+":=" { return Parser.OP_ATRIBUICAO; }
+"," { return Parser.VIRGULA; }
+":" { return Parser.DOIS_PONTOS; }
 {NL}|" "|\t	{  }

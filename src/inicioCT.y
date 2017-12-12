@@ -22,6 +22,9 @@
 %token IMPRIMA
 %token SE
 %token SENAO
+%token CASO
+%token OPCAO
+%token FIM_OPCAO
 %token ENQUANTO
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
@@ -39,6 +42,7 @@
 %token OP_MAIOR_IGUAL
 %token OP_MENOR_IGUAL
 %token VIRGULA
+%token DOIS_PONTOS
 %token <sval> STRING
 %token <sval> CHAR
 %type <sval> operador_logico
@@ -65,7 +69,10 @@
 %type <sval> operandos_aritmeticos
 %type <sval> chamada_funcao
 %type <sval> cmd_if
+%type <sval> cmd_switch
+%type <sval> cmd_case
 %type <sval> cmd_while
+%type <sval> operandos_switch
 
 %%
 inicio : programa	 { System.out.println($1); }
@@ -86,12 +93,20 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
             | cmd_if comandos { $$ = $1 + $2; }
+            | cmd_switch comandos { $$ = $1 + $2; }
             | cmd_while comandos { $$ = $1 + $2; }
             |					{ $$ = ""; }
 
 cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
         | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "if(" + $3 + ")" + $5 + "\n "; }
         | SE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "if(" + $3 + ")\n  "; }
+
+cmd_switch : CASO ABRE_PARENTESES operandos_switch FECHA_PARENTESES ABRE_CHAVES cmd_case FECHA_CHAVES { $$ = "switch(" + $3 + "){\n  " + $6 + "\n }\n "; }
+
+cmd_case: OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECHA_CHAVES cmd_case { $$ = "case " + $2 + ":{\n   " + $5 + "  break;\n}" + $8; }
+        | OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECHA_CHAVES { $$ = "case " + $2 + ":{\n   " + $5 + "  break;\n}"; }
+        | OPCAO operandos_switch DOIS_PONTOS comandos FIM_OPCAO cmd_case { $$ = "case " + $2 + ":\n   " + $4 + "  break;\n  " + $6; }
+        | OPCAO operandos_switch DOIS_PONTOS comandos FIM_OPCAO { $$ = "case " + $2 + ":\n   " + $4 + "  break;"; }
 
 cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n "; }
         | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n  "; }
@@ -155,6 +170,10 @@ operandos_logicos : operandos_aritmeticos { $$ = $1; }
         | STRING { $$ = $1; }
         | ABRE_PARENTESES CHAR FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
         | ABRE_PARENTESES STRING FECHA_PARENTESES { $$ = "(" + $2 + ")"; }
+
+operandos_switch : CHAR { $$ = $1; }
+        | NUMERICO { $$ = $1; }
+        | variavel { $$ = $1; }
 
 operador_aritmetico : OP_SOMA { $$ = " + "; }
         | OP_SUB { $$ = " - "; }
