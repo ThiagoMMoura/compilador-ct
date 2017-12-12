@@ -198,6 +198,7 @@ operador_aritmetico : OP_SOMA { $$ = " + "; }
         | OP_SUB { $$ = " - "; }
         | OP_DIV { $$ = " / "; }
         | OP_MULT { $$ = " * "; }
+        | OP_MOD { $$ = " % "; }
 
 operador_logico : OP_IGUALDADE { $$ = " == "; }
         | OP_DIFERENTE { $$ = " != "; }
