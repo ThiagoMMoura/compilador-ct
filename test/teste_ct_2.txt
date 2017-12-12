@@ -26,7 +26,11 @@ funcao real functeste(inteiro parame) {
             i++
         }
     }
-    i++3
+    enquanto(i<10){
+        se(teste2[i]==0)
+            teste2[i]++
+        i++
+    }
 }
 
 funcao inteiro func2(){

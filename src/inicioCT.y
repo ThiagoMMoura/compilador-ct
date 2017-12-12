@@ -22,6 +22,7 @@
 %token IMPRIMA
 %token SE
 %token SENAO
+%token ENQUANTO
 %token OP_ATRIBUICAO
 %token <sval> NUMERICO
 %token OP_INCREMENTO
@@ -64,6 +65,7 @@
 %type <sval> operandos_aritmeticos
 %type <sval> chamada_funcao
 %type <sval> cmd_if
+%type <sval> cmd_while
 
 %%
 inicio : programa	 { System.out.println($1); }
@@ -84,11 +86,15 @@ comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
             | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
             | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
             | cmd_if comandos { $$ = $1 + $2; }
+            | cmd_while comandos { $$ = $1 + $2; }
             |					{ $$ = ""; }
 
 cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
         | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "if(" + $3 + ")" + $5 + "\n "; }
         | SE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "if(" + $3 + ")\n  "; }
+
+cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n "; }
+        | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n  "; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 

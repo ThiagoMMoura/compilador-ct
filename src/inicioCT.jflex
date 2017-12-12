@@ -30,6 +30,7 @@ funcao { return Parser.FUNCAO; }
 retornar { return Parser.RETORNAR; }
 se { return Parser.SE; }
 senao { return Parser.SENAO; }
+enquanto { return Parser.ENQUANTO; }
 imprima { return Parser.IMPRIMA; }
 \<.*\>	{ yyparser.yylval = new ParserVal(yytext());
 		  return Parser.INCLUSAO_ARQUIVO; }
