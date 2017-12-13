@@ -81,6 +81,10 @@
 %type <sval> cmd_do_while
 %type <sval> cmd_for
 %type <sval> operandos_switch
+%type <sval> inicio_bloco
+%type <sval> fim_bloco
+%type <sval> inicio_case
+%type <sval> fim_case
 
 %%
 inicio : programa	 { System.out.println($1); }
@@ -94,41 +98,49 @@ programa : inclusao programa	{ $$ = $1 + "\n" + $2; }
 
 funcao_principal : FUNCAO_PRINCIPAL bloco { $$ = "int main() " + $2 + "\n"; }
 
-bloco : ABRE_CHAVES comandos FECHA_CHAVES { $$ = "{\n " + $2 + "}"; }
+bloco : inicio_bloco comandos fim_bloco { $$ = $1 + $2 + $3;}
+
+inicio_bloco : ABRE_CHAVES { dist++; $$ = "{\n"; }
+
+fim_bloco : FECHA_CHAVES { dist--; $$ = indenta(dist) + "}"; }
 
 inclusao : INCLUIR INCLUSAO_ARQUIVO	{ $$ = "#include " + $2; }
 
-comandos : declaracao comandos	{ $$ = $1 + ";\n " + $2; }
-            | atribuicao comandos { $$ = $1 + ";\n " + $2; }
-            | RETORNAR expressoes comandos { $$ = "return " + $2 + ";\n " + $3; }
-            | chamada_funcao comandos { $$ = $1 + ";\n " + $2; }
-            | cmd_if comandos { $$ = $1 + $2; }
-            | cmd_switch comandos { $$ = $1 + $2; }
-            | cmd_while comandos { $$ = $1 + $2; }
-            | cmd_do_while comandos { $$ = $1 + $2; }
-            | cmd_for comandos { $$ = $1 + $2; }
-            | COMENTARIO_LINHA comandos { $$ = $1 + "\n" + $2; }
-            | COMENTARIO_BLOCO comandos { $$ = $1 + "\n" + $2; }
+comandos : declaracao comandos	{ $$ = indenta(dist) + $1 + ";\n" + $2; }
+            | atribuicao comandos { $$ = indenta(dist) + $1 + ";\n" + $2; }
+            | RETORNAR expressoes comandos { $$ = indenta(dist) + "return " + $2 + ";\n" + $3; }
+            | chamada_funcao comandos { $$ = indenta(dist) + $1 + ";\n" + $2; }
+            | cmd_if comandos { $$ = indenta(dist) + $1 + $2 ; }
+            | cmd_switch comandos { $$ = indenta(dist) + $1 + $2 ; }
+            | cmd_while comandos { $$ = indenta(dist) + $1 + $2 ; }
+            | cmd_do_while comandos { $$ = indenta(dist) + $1 + $2 ; }
+            | cmd_for comandos { $$ = indenta(dist) + $1 + $2; }
+            | COMENTARIO_LINHA comandos { $$ = indenta(dist) + $1 + "\n" + $2 ; }
+            | COMENTARIO_BLOCO comandos { $$ = indenta(dist) + $1 + "\n" + $2 ; }
             |					{ $$ = ""; }
 
-cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n "; }
-        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "if(" + $3 + ")" + $5 + "\n "; }
-        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "if(" + $3 + ")\n  "; }
+cmd_if : SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco SENAO bloco { $$ = "if(" + $3 + ")" + $5 + "else" + $7 + "\n"; }
+        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "if(" + $3 + ")" + $5 + "\n"; }
+        | SE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "if(" + $3 + ")\n" + indenta(1); }
 
-cmd_switch : CASO ABRE_PARENTESES operandos_switch FECHA_PARENTESES ABRE_CHAVES cmd_case FECHA_CHAVES { $$ = "switch(" + $3 + "){\n  " + $6 + "\n }\n "; }
+cmd_switch : CASO ABRE_PARENTESES operandos_switch FECHA_PARENTESES inicio_bloco cmd_case fim_bloco { $$ = "switch(" + $3 + ")" + $5 + $6 + "\n" + $7 + "\n"; }
 
-cmd_case: OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECHA_CHAVES cmd_case { $$ = "case " + $2 + ":{\n   " + $5 + "  break;\n}" + $8; }
-        | OPCAO operandos_switch DOIS_PONTOS ABRE_CHAVES comandos FIM_OPCAO FECHA_CHAVES { $$ = "case " + $2 + ":{\n   " + $5 + "  break;\n}"; }
-        | OPCAO operandos_switch DOIS_PONTOS comandos FIM_OPCAO cmd_case { $$ = "case " + $2 + ":\n   " + $4 + "  break;\n  " + $6; }
-        | OPCAO operandos_switch DOIS_PONTOS comandos FIM_OPCAO { $$ = "case " + $2 + ":\n   " + $4 + "  break;"; }
+cmd_case: OPCAO operandos_switch DOIS_PONTOS inicio_bloco comandos FIM_OPCAO fim_bloco cmd_case { $$ = indenta(dist) + "case " + $2 + ":" + $4 + $5 + indenta(dist) + "break;\n" + $7 + $8; }
+        | OPCAO operandos_switch DOIS_PONTOS inicio_bloco comandos FIM_OPCAO fim_bloco { $$ = indenta(dist) + "case " + $2 + ":" + $4 + $5 + indenta(dist) + "break;\n" + $7; }
+        | OPCAO operandos_switch inicio_case comandos fim_case cmd_case { $$ = indenta(dist) + "case " + $2 + $3 + $4 + $5 + "\n" + $6; }
+        | OPCAO operandos_switch inicio_case comandos fim_case { $$ = indenta(dist) + "case " + $2 + $3 + $4 + $5; }
 
-cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n "; }
-        | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n  "; }
+inicio_case : DOIS_PONTOS { dist++; $$ = ":\n"; }
 
-cmd_do_while : FACA ABRE_CHAVES comandos FECHA_CHAVES ATE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "do{\n  " + $3 + "}while(" + $7 + ");\n "; }
+fim_case : FIM_OPCAO { $$ = indenta(dist) + "break;"; dist--; }
 
-cmd_for : PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA incremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n "; }
-        | PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA decremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n "; }
+cmd_while : ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES bloco { $$ = "while(" + $3 + ")" + $5 + "\n"; }
+        | ENQUANTO ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "while(" + $3 + ")\n"; }
+
+cmd_do_while : FACA inicio_bloco comandos fim_bloco ATE ABRE_PARENTESES expressoes FECHA_PARENTESES { $$ = "do" + $2 + $3 + $4 + "while(" + $7 + ");\n"; }
+
+cmd_for : PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA incremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n"; }
+        | PARA ABRE_PARENTESES atribuicao PONTO_VIRGULA expressoes PONTO_VIRGULA decremento FECHA_PARENTESES bloco { $$ = "for(" + $3 + ";" + $5 + ";" + $7 + ")" + $9 + "\n"; }
 
 declaracao : tipo variavel	{  $$ = $1 + $2;  }
 
@@ -214,6 +226,7 @@ tipo : INTEIRO { $$ = "int "; }
 
 	// Referencia ao JFlex
 	private Yylex lexer;
+        public int dist = 0;
 
 	/* Interface com o JFlex */
 	private int yylex(){
@@ -245,3 +258,11 @@ tipo : INTEIRO { $$ = "int "; }
 				System.err.println("Error: " + ex);
 			}
 	}
+
+        public String indenta(int qtd){
+            String str = "";
+            for(int i=0;i<qtd;i++){
+                str += "  ";
+            }
+            return str;
+        }
