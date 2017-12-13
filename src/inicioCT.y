@@ -87,7 +87,7 @@
 %type <sval> fim_case
 
 %%
-inicio : programa	 { System.out.println($1); }
+inicio : programa	 { System.out.println($1); geraArquivo("programa.c",$1); }
 
 programa : inclusao programa	{ $$ = $1 + "\n" + $2; }
 		| funcao_principal programa { $$ = $1 + "\n" + $2; }
@@ -266,3 +266,21 @@ tipo : INTEIRO { $$ = "int "; }
             }
             return str;
         }
+
+        public void geraArquivo(String nomeArquivo,String coteudo) {
+
+		File arquivo = new File(nomeArquivo);
+		
+		try {
+			FileWriter fw = new FileWriter(arquivo);
+			
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			bw.write(coteudo);
+			
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}

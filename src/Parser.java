@@ -682,7 +682,25 @@ final static String yyrule[] = {
             }
             return str;
         }
-//#line 614 "Parser.java"
+
+        public void geraArquivo(String nomeArquivo,String coteudo) {
+
+		File arquivo = new File(nomeArquivo);
+		
+		try {
+			FileWriter fw = new FileWriter(arquivo);
+			
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			bw.write(coteudo);
+			
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+//#line 632 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -838,7 +856,7 @@ boolean doaction;
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
 //#line 90 "inicioCT.y"
-{ System.out.println(val_peek(0).sval); }
+{ System.out.println(val_peek(0).sval); geraArquivo("programa.c",val_peek(0).sval); }
 break;
 case 2:
 //#line 92 "inicioCT.y"
@@ -1240,7 +1258,7 @@ case 101:
 //#line 224 "inicioCT.y"
 { yyval.sval = "char "; }
 break;
-//#line 1167 "Parser.java"
+//#line 1185 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
