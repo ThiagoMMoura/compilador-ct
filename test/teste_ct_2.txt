@@ -1,94 +1,108 @@
+// Inclusao de Bibliotecas
+
 incluir <stdio.h>
-incluir <stdlib.h>
+incluir <math.h>
+
+// Funcao media que retorna um real
+
+funcao real media (inteiro a) {
+  inteiro i
+  inteiro soma
+  inteiro quantidade
+  real retorno
+
+  soma := 0
+  quantidade := 0
+  
+  para (i := 1; i << a; i++) {  
+    se (a%i == 0) {
+      quantidade++
+      soma := soma + i
+    }
+  }
+
+  retorno := soma / quan_tidade
+  retornar retorno
+}
+
+funcao inteiro soma (inteiro a) {
+  inteiro i
+  inteiro somatorio
+
+  somatorio := 0
+  
+  para (i:=1;i<=a;i++) {
+    se (a%i==0)
+      somatorio:=somatorio+i
+  }
+  retornar somatorio
+}
+
+funcao inteiro fatorial (inteiro a) {
+  inteiro i
+  inteiro fat
+
+  fat := 1
+  para (i=1;i<=a;i++) {
+    fat:=fat*i
+  }
+  retornar fat
+}
+
+funcao caracter geraFuncao () {
+  inteiro valor
+  valor := rand()%10
+  se (valor<=3) {
+    retornar 'm'
+  } senao {
+    se (valor<=6) {
+      retornar 's'
+    } senao {
+      retornar 'f'
+    }
+  }
+}
+
+funcao inteiro geraValores () {
+  inteiro retorno
+  retorno := (rand()%10+1)
+  retornar retorno
+}
 
 funcao_principal {
-        inteiro tam
-        real dinheiro[tam - 1]
-        caracter palavra[tam]
-        dinheiro[0] := 6
-        dinheiro[tam++] := 20 * dinheiro[0]
-        dinheiro[tam-1] := 30
-        palavra[0] := 'a'
-        palavra[1] := 'b'
-        se(palavra[1]=='b')
-            palavra[2]:='c'
-        retornar dinheiro[0]+ tam++
-}
+  caracter funcoes[tamanho]
+  inteiro valores[tamanho]
+  real resultado[tamanho]
+  inteiro i
 
-funcao real functeste(inteiro parame) {
-    inteiro i 
-    i := 0
-    inteiro teste2[10]
-    se(i>0){
-        teste2[i++]:=i
-    }senao{
-        se(i<0){
-            i++
-        }
-    }
-    enquanto(i<10){
-        se(teste2[i]%i==0)
-            teste2[i]++
-        i++
-    }
-}
+  i := 0
+  enquanto (i <> tamanho) {
+    funcoes[i]=geraFuncao()
+    valores[i]=geraValores()
+    i++  
+  
 
-funcao inteiro func2(){
-    inteiro atrib
-    inteiro n
-    atrib := 1
-    atrib := 1 + 1
-    atrib := 1 * 2 + 10
-    atrib := 1 + n
-    atrib := n * 2
-    atrib := n + atrib - 5
-    atrib := n / n
-    atrib:=rand()
-    atrib:=rand() + 1
-    atrib:=atrib+1
-    atrib--
-    atrib:=(1+n)-2
-    atrib:=(1+n*8)
-    atrib:=50/(1+n)
-    atrib:=(rand()*n)-2*8
-    atrib:=(rand()*n)-(2*8)
-    atrib:=((rand()*n)-2)*8
-    atrib:=(rand()*(n-10))-2*8
-    atrib:=12+(rand()*n)-2*8
-    n[i]++
-    n[rand()*10]:=math(atrib+12)/33
-    n[i++]:=imprima("%d\n %c",12,n[i])
-    retornar atrib + n
-}
-// teste comentário
-/* comentário teste 2 */
-funcao inteiro testaSwitch(caracter ca){
-    inteiro i
-    inteiro retorno
-    caracter inter[tam]
-    inter:=ca
-    faca{
-        caso(inter[i]){
-            opcao 'a':
-                retorno:= 1
-                fim_opcao
-            opcao 'b':
-                retorno:= 2
-                fim_opcao
-            opcao 'c':
-                retorno:=3
-                fim_opcao
-            }
-        i++
-    }ate(i<tam)
-    retornar i
-}
+  i := 0
+  faca {
+    caso (funcoes[i]) {
+      opcao 'm': 
+        resultado[i]=media(valores[i])
+        fim_opcao
+      opcao 's':
+        resultado[i]=soma(valores[i])
+        fim_opcao
+      opcao 'f':
+        resultado[i]=fatorial(valores[i])
+        fim_opcao
+      }
+      i++
+  } ate (i >= tamanho)
 
-funcao inteiro testaFor(inteiro tam){
-    inteiro i
-    inteiro lista[tam]
-    para(i:=0;i<tam;i++){
-        lista[i]:=i*5
-    }
-    retornar lista
+  /* A parte final é só para verificar o resultado */
+  para (i :=0; i<tamanho; i++) {
+    imprima("%d ", valores[i])
+    imprima("%c ", funcoes[i])
+    imprima("%f\n", resultado[i])
+  }
+  retornar 0
 }

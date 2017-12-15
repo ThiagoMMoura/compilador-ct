@@ -38,7 +38,7 @@ faca { return Parser.FACA; }
 ate { return Parser.ATE; }
 para { return Parser.PARA; }
 imprima { return Parser.IMPRIMA; }
-\<.*\>	{ yyparser.yylval = new ParserVal(yytext());
+\<.+\>	{ yyparser.yylval = new ParserVal(yytext());
 		  return Parser.INCLUSAO_ARQUIVO; }
 \".*\"  { yyparser.yylval = new ParserVal(yytext());
                 return Parser.STRING; }
@@ -63,14 +63,10 @@ imprima { return Parser.IMPRIMA; }
 "/" { return Parser.OP_DIV; }
 "*" { return Parser.OP_MULT; }
 "%" { return Parser.OP_MOD; }
-"==" { return Parser.OP_IGUALDADE; }
-"!=" { return Parser.OP_DIFERENTE; }
+"!" { return Parser.OP_DIFERENTE; }
 ">" { return Parser.OP_MAIOR; }
 "<" { return Parser.OP_MENOR; }
-">=" { return Parser.OP_MAIOR_IGUAL; }
-"<=" { return Parser.OP_MENOR_IGUAL; }
-":=" { return Parser.OP_ATRIBUICAO; }
-"=" { return Parser.OP_ATRIBUICAO; }
+"=" { return Parser.OP_IGUAL; }
 "," { return Parser.VIRGULA; }
 ":" { return Parser.DOIS_PONTOS; }
 ";" { return Parser.PONTO_VIRGULA; }
@@ -78,4 +74,10 @@ imprima { return Parser.IMPRIMA; }
                 return Parser.COMENTARIO_LINHA; }
 \/\*.*\*\/   { yyparser.yylval = new ParserVal(yytext());
                 return Parser.COMENTARIO_BLOCO; }
-{NL}|" "|\t	{  }
+" "|\t	{  }
+{NL} { yyparser.contaLinha(); }
+[0-9_][a-zA-Z0-9]* |
+[a-zA-Z][a-zA-Z0-9]*[_\?\@]+[a-zA-Z0-9]* {
+                yyparser.yylval = new ParserVal(yytext());
+		return Parser.IDENTIFICADOR_INVALIDO;
+        }
